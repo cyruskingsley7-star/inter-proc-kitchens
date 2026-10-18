@@ -1,0 +1,39 @@
+name: Remove transformation details and stages
+on:
+  push:
+    paths:
+      - '.github/workflows/remove-transformation-details.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  simplify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Keep only before and after comparison
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          html=p.read_text(encoding='utf-8')
+          pattern=r'(\s*<div class="story-results">).*?(?=\s*</section>)'
+          html, n=re.subn(pattern, '', html, count=1, flags=re.S)
+          if n!=1:
+              raise SystemExit('Expected details section not found. No changes made.')
+          if html.count('class="story-compare"')!=1:
+              raise SystemExit('Before and after comparison missing or duplicated.')
+          if 'class="story-results"' in html or 'class="story-step"' in html:
+              raise SystemExit('Details were not fully removed.')
+          p.write_text(html,encoding='utf-8')
+          print('Removed What changed, all three stages, additional photographs, and section WhatsApp CTA.')
+          PY
+      - name: Commit simplified work page
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || (git commit -m "Remove transformation details and stages, retain before-after photos" && git push)
