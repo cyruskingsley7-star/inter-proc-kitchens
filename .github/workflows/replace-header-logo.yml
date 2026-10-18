@@ -1,0 +1,43 @@
+name: Install supplied transparent header logo
+
+on:
+  push:
+    paths:
+      - '.github/workflows/replace-header-logo.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  replace-logo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace header artwork with supplied transparent logo
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          assert Path('inter-proc-logo.png').is_file(), 'Logo image is missing'
+          pattern = r'(<a class="brand"[^>]*>).*?(</a>)'
+          replacement = r'\1<img src="/inter-proc-logo.png" alt="INTER-PROC" width="510" height="151" />\2'
+          html, count = re.subn(pattern, replacement, html, count=1, flags=re.S)
+          if count != 1:
+              raise SystemExit('Could not find the website header logo')
+          rule = '.site-header .brand img { display: block; width: 176px; max-width: 44vw; height: auto; }'
+          if rule not in html:
+              html = html.replace('</style>', rule + '\n</style>', 1)
+          p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit website logo change
+        run: |
+          if ! git diff --quiet -- index.html; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "Replace website header with original transparent INTER-PROC logo"
+            git push
+          fi
