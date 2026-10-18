@@ -1,0 +1,53 @@
+name: Clean website URL and refresh favicon
+
+on:
+  push:
+    paths:
+      - '.github/workflows/clean-url-and-favicon.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Keep section navigation but hide URL fragments
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          before = "history.replaceState(null, '', link.getAttribute('href'));"
+          after = "history.replaceState(null, '', window.location.pathname);"
+          if before in html:
+              html = html.replace(before, after)
+          elif after not in html:
+              raise SystemExit('Expected navigation code not found; no changes made.')
+          old_icon = 'href="/favicon.ico?v=3"'
+          if old_icon not in html and 'href="/favicon.ico?v=4"' not in html:
+              raise SystemExit('Expected favicon declaration not found; no changes made.')
+          html = html.replace(old_icon, 'href="/favicon.ico?v=4"')
+          favicon_line = '<link rel="icon" type="image/x-icon" href="/favicon.ico?v=4" />'
+          clean_url = """<script>
+      window.addEventListener('load', () => {
+        if (window.location.hash || window.location.search) {
+          history.replaceState(null, '', window.location.pathname);
+        }
+      }, { once: true });
+    </script>"""
+          if clean_url not in html:
+              html = html.replace(favicon_line, favicon_line + '\n    ' + clean_url, 1)
+          p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit clean URL and favicon
+        run: |
+          if ! git diff --quiet -- index.html; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "Keep website URLs clean and use larger original favicon"
+            git push
+          fi
