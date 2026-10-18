@@ -1,4 +1,4 @@
-name: Clean website URL and refresh favicon
+name: Enable clean section URLs
 
 on:
   push:
@@ -14,34 +14,47 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Keep section navigation but hide URL fragments
+      - name: Update section links and browser navigation
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p = Path('index.html')
           html = p.read_text(encoding='utf-8')
-          before = "history.replaceState(null, '', link.getAttribute('href'));"
-          after = "history.replaceState(null, '', window.location.pathname);"
-          if before in html:
-              html = html.replace(before, after)
-          elif after not in html:
-              raise SystemExit('Expected navigation code not found; no changes made.')
-          old_icon = 'href="/favicon.ico?v=3"'
-          if old_icon not in html and 'href="/favicon.ico?v=4"' not in html:
-              raise SystemExit('Expected favicon declaration not found; no changes made.')
-          html = html.replace(old_icon, 'href="/favicon.ico?v=4"')
-          favicon_line = '<link rel="icon" type="image/x-icon" href="/favicon.ico?v=4" />'
-          clean_url = "<script>window.addEventListener('load',()=>{if(location.hash||location.search)history.replaceState(null,'',location.pathname)},{once:true});</script>"
-          if clean_url not in html:
-              html = html.replace(favicon_line, favicon_line + '\n    ' + clean_url, 1)
+          for section in ('work', 'craft', 'process', 'about', 'contact'):
+              html = html.replace('href="#' + section + '" data-jump="' + section + '"', 'href="/' + section + '" data-jump="' + section + '"')
+          html = html.replace('href="#top" data-jump="top"', 'href="/" data-jump="top"')
+          before = "history.replaceState(null, '', window.location.pathname);"
+          after = """const nextPath = link.dataset.jump === 'top' ? '/' : '/' + link.dataset.jump;
+                if (window.location.pathname !== nextPath) history.pushState(null, '', nextPath);"""
+          if before not in html and after not in html:
+              raise SystemExit('Expected navigation history code not found; no changes made')
+          html = html.replace(before, after, 1)
+          marker = '// Preserve native links so WhatsApp and email can open their installed apps.'
+          route_code = """// Deep links and browser Back/Forward return to the correct section.
+          const showCurrentRoute = () => {
+            const segment = window.location.pathname.replace(/^\\/+|\\/+$/g, '');
+            const target = document.getElementById(segment || 'top');
+            if (target) {
+              target.scrollIntoView({ behavior: 'instant', block: 'start' });
+              if (segment) target.focus({ preventScroll: true });
+            }
+          };
+          window.addEventListener('load', showCurrentRoute, { once: true });
+          window.addEventListener('popstate', showCurrentRoute);
+          
+          """
+          if 'const showCurrentRoute = () =>' not in html:
+              if marker not in html:
+                  raise SystemExit('Expected navigation marker not found; no changes made')
+              html = html.replace(marker, route_code + marker, 1)
           p.write_text(html, encoding='utf-8')
           PY
-      - name: Commit clean URL and favicon
+      - name: Commit clean routes
         run: |
           if ! git diff --quiet -- index.html; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add index.html
-            git commit -m "Keep website URLs clean and use larger original favicon"
+            git commit -m "Use clean URLs for Work, Craft, Process, About and Contact"
             git push
           fi
