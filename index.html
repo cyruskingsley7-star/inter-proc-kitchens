@@ -6,7 +6,8 @@
     <meta name="theme-color" content="#f4f0e9" />
     <meta name="description" content="INTER-PROC designs, builds and installs custom kitchens and cabinetry in Uganda." />
     <title>INTER-PROC Kitchens</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=3" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=4" />
+    <script>window.addEventListener('load',()=>{if(location.hash||location.search)history.replaceState(null,'',location.pathname)},{once:true});</script>
     <style>
 :root {
   --ivory: #f4f0e9;
@@ -474,7 +475,7 @@ document.querySelectorAll('[data-jump]').forEach((link) => {
 
     const revealTarget = () => {
       target.scrollIntoView({ behavior: 'auto', block: 'start' });
-      history.replaceState(null, '', link.getAttribute('href'));
+      history.replaceState(null, '', window.location.pathname);
       target.focus({ preventScroll: true });
       window.setTimeout(() => {
         transitionLayer?.classList.remove('is-visible');
