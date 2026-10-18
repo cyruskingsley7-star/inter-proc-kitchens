@@ -1,0 +1,24 @@
+{
+  "rewrites": [
+    {
+      "source": "/work",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/craft",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/process",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/index.html"
+    }
+  ]
+}
