@@ -72,6 +72,11 @@ jobs:
           m=re.search(r'<section\s+id="craft"',html)
           if not m: raise SystemExit('Could not locate the existing Craft section')
           html=html[:m.start()]+section+'\n'+html[m.start():]
+          # Add a clear way to reach the transformation from the homepage.
+          work_link='<a class="text-link" href="/work#transformation" data-jump="transformation">See before &amp; after <span aria-hidden="true">→</span></a>'
+          hero_link='<a class="text-link" href="#work" data-jump="work">View selected work <span aria-hidden="true">→</span></a>'
+          if hero_link in html:
+              html=html.replace(hero_link,hero_link+'\n            '+work_link,1)
           p.write_text(html,encoding='utf-8')
           PY
       - name: Commit transformed website
