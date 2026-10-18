@@ -1,0 +1,39 @@
+name: Refresh repaired header logo
+
+on:
+  push:
+    paths:
+      - '.github/workflows/refresh-header-logo.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-logo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refresh logo URL to bypass cached broken image
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          old = 'src="/inter-proc-logo.png"'
+          new = 'src="/inter-proc-logo.png?v=2"'
+          if old not in html and new not in html:
+              raise SystemExit('Expected header logo not found')
+          if old in html:
+              html = html.replace(old, new, 1)
+              p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit refreshed image URL
+        run: |
+          if ! git diff --quiet -- index.html; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "Refresh header logo after repairing PNG"
+            git push
+          fi
