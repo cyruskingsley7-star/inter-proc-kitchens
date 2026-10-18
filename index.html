@@ -265,6 +265,25 @@ a.contact-card:active, a.contact-card.is-activating { transform: translateX(5px)
 }
 
 .site-header .brand img { display: block; width: 176px; max-width: 44vw; height: auto; }
+
+.transformation{padding:clamp(3.5rem,7vw,7rem) clamp(1.25rem,4vw,4.5rem);background:#f5f1ea;color:#1a1918;scroll-margin-top:6rem}
+.transformation .transform-intro{display:flex;justify-content:space-between;align-items:end;gap:2rem;margin-bottom:2rem}
+.transformation .transform-intro h2{font-family:Georgia,serif;font-size:clamp(2.2rem,5vw,5rem);font-weight:400;line-height:1.06;letter-spacing:-.035em;margin:.5rem 0 0}
+.transformation .transform-intro>p{max-width:355px;color:#66615c;font-size:.95rem;line-height:1.7}
+.transformation .transform-pair{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.transformation figure{margin:0;min-width:0}
+.transformation .transform-pair img{width:100%;height:clamp(300px,43vw,580px);object-fit:cover;display:block}
+.transformation figcaption{display:flex;justify-content:space-between;gap:1rem;padding:.85rem 0 1rem;border-bottom:1px solid #d7d0c7;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.transformation .transform-label{color:#cc001b}
+.transformation .transform-gallery-heading{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin:3rem 0 1.2rem}
+.transformation .transform-gallery-heading h3{font-family:Georgia,serif;font-weight:400;font-size:clamp(1.5rem,2.5vw,2.5rem)}
+.transformation .transform-gallery-heading p{font-size:.8rem;color:#716c67}
+.transformation .transform-gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem}
+.transformation .transform-gallery img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;background:#dedbd5}
+.transformation .transform-gallery figcaption{font-size:.63rem;letter-spacing:.06em}
+.transformation .transform-cta{margin-top:2.4rem;display:inline-flex;gap:1rem;align-items:center;background:#cc001b;color:#fff;padding:1.15rem 1.45rem;text-decoration:none;font-size:.73rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+@media(max-width:760px){.transformation .transform-intro{display:block}.transformation .transform-intro>p{margin-top:1rem}.transformation .transform-pair{grid-template-columns:1fr}.transformation .transform-pair img{height:auto;max-height:620px;aspect-ratio:3/4}.transformation .transform-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.transformation .transform-gallery-heading{display:block}}
+
 </style>
     
   </head>
@@ -328,7 +347,17 @@ a.contact-card:active, a.contact-card.is-activating { transform: translateX(5px)
         </div>
       </section>
 
-      <section id="craft" class="craft-inline scroll-section" tabindex="-1">
+      
+<section id="transformation" class="transformation scroll-section" tabindex="-1" aria-labelledby="transform-title">
+<div class="transform-intro"><div><p class="eyebrow">Before &amp; after · Real project</p><h2 id="transform-title">The transformation.</h2></div><p>From an empty tiled room to a fitted kitchen with tailored grey cabinetry, marble-look countertops and illuminated glass-fronted storage.</p></div>
+<div class="transform-pair" aria-label="Kitchen before and after installation">
+<figure><img src="/transformations/before-01.jpg" alt="Before: empty tiled kitchen with no fitted cabinetry" loading="lazy"><figcaption><span class="transform-label">01 / Before</span><span>Room ready for cabinetry</span></figcaption></figure>
+<figure><img src="/transformations/after-02.jpg" alt="After: installed grey kitchen cabinetry and marble-look countertops" loading="lazy"><figcaption><span class="transform-label">02 / After</span><span>Cabinetry installed</span></figcaption></figure>
+</div>
+<div class="transform-gallery-heading"><h3>The project, step by step.</h3><p>12 original on-site photographs</p></div>
+<div class="transform-gallery" aria-label="All before and after project photos">
+<figure><img src="/transformations/before-01.jpg" alt="Before: kitchen room prepared for cabinetry" loading="lazy"><figcaption><span class="transform-label">Before</span><span>Site preparation</span></figcaption></figure><figure><img src="/transformations/before-02.jpg" alt="Before: kitchen room prepared for cabinetry" loading="lazy"><figcaption><span class="transform-label">Before</span><span>Site preparation</span></figcaption></figure><figure><img src="/transformations/before-03.jpg" alt="Before: kitchen room prepared for cabinetry" loading="lazy"><figcaption><span class="transform-label">Before</span><span>Site preparation</span></figcaption></figure><figure><img src="/transformations/before-04.jpg" alt="Before: kitchen room prepared for cabinetry" loading="lazy"><figcaption><span class="transform-label">Before</span><span>Site preparation</span></figcaption></figure><figure><img src="/transformations/after-01.jpg" alt="After: INTER-PROC fitted kitchen and installation work" loading="lazy"><figcaption><span class="transform-label">After</span><span>Cabinetry and finishing</span></figcaption></figure><figure><img src="/transformations/after-02.jpg" alt="After: INTER-PROC fitted kitchen and installation work" loading="lazy"><figcaption><span class="transform-label">After</span><span>Cabinetry and finishing</span></figcaption></figure><figure><img src="/transformations/after-03.jpg" alt="After: INTER-PROC fitted kitchen and installation work" loading="lazy"><figcaption><span class="transform-label">After</span><span>Cabinetry and finishing</span></figcaption></figure><figure><img src="/transformations/after-04.jpg" alt="After: INTER-PROC fitted kitchen and installation work" loading="lazy"><figcaption><span class="transform-label">After</span><span>Cabinetry and finishing</span></figcaption></figure><figure><img src="/transformations/after-05.jpg" alt="After: INTER-PROC fitted kitchen and installation work" loading="lazy"><figcaption><span class="transform-label">After</span><span>Cabinetry and finishing</span></figcaption></figure><figure><img src="/transformations/after-06.jpg" alt="After: INTER-PROC fitted kitchen and installation work" loading="lazy"><figcaption><span class="transform-label">After</span><span>Cabinetry and finishing</span></figcaption></figure><figure><img src="/transformations/after-07.jpg" alt="After: INTER-PROC fitted kitchen and installation work" loading="lazy"><figcaption><span class="transform-label">After</span><span>Cabinetry and finishing</span></figcaption></figure><figure><img src="/transformations/after-08.jpg" alt="After: INTER-PROC fitted kitchen and installation work" loading="lazy"><figcaption><span class="transform-label">After</span><span>Cabinetry and finishing</span></figcaption></figure></div><a class="transform-cta" href="https://wa.me/256752400883?text=Hello%20INTER-PROC%2C%20I%20saw%20your%20kitchen%20transformation%20and%20would%20like%20to%20discuss%20mine." target="_blank" rel="noopener noreferrer">Discuss your kitchen ↗</a></section>
+<section id="craft" class="craft-inline scroll-section" tabindex="-1">
         <div class="craft-heading">
           <p class="eyebrow">The craft</p>
           <h2>Built by people who understand the details.</h2>
