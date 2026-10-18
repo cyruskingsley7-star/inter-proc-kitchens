@@ -1,0 +1,39 @@
+name: Set explicit INTER-PROC favicon
+
+on:
+  push:
+    paths:
+      - '.github/workflows/set-favicon.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  set-favicon:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add favicon link without changing the design
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          marker = '<title>INTER-PROC Kitchens</title>'
+          tag = '<link rel="icon" type="image/x-icon" href="/favicon.ico?v=3" />'
+          if tag not in html:
+              if marker not in html:
+                  raise SystemExit('Expected HTML title not found; no changes made.')
+              html = html.replace(marker, marker + '\n    ' + tag, 1)
+              p.write_text(html, encoding='utf-8')
+          PY
+      - name: Commit favicon declaration
+        run: |
+          if ! git diff --quiet -- index.html; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "Explicitly link original INTER-PROC favicon"
+            git push
+          fi
