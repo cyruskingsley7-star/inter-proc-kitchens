@@ -31,13 +31,7 @@ jobs:
               raise SystemExit('Expected favicon declaration not found; no changes made.')
           html = html.replace(old_icon, 'href="/favicon.ico?v=4"')
           favicon_line = '<link rel="icon" type="image/x-icon" href="/favicon.ico?v=4" />'
-          clean_url = """<script>
-      window.addEventListener('load', () => {
-        if (window.location.hash || window.location.search) {
-          history.replaceState(null, '', window.location.pathname);
-        }
-      }, { once: true });
-    </script>"""
+          clean_url = "<script>window.addEventListener('load',()=>{if(location.hash||location.search)history.replaceState(null,'',location.pathname)},{once:true});</script>"
           if clean_url not in html:
               html = html.replace(favicon_line, favicon_line + '\n    ' + clean_url, 1)
           p.write_text(html, encoding='utf-8')
