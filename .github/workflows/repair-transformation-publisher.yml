@@ -1,0 +1,30 @@
+name: Repair transformation publisher pattern
+on:
+  push:
+    paths:
+      - '.github/workflows/repair-transformation-publisher.yml'
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Correct section matching pattern
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path(".github/workflows/refine-transformation-story.yml")
+          s=p.read_text()
+          old='id="transformation"' + chr(92) + 'b.*?</section>'
+          new='id="transformation".*?</section>'
+          if old not in s: raise SystemExit("Expected pattern not found")
+          p.write_text(s.replace(old,new))
+          PY
+      - name: Publish correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/workflows/refine-transformation-story.yml
+          git commit -m "Fix before and after story matching"
+          git push
