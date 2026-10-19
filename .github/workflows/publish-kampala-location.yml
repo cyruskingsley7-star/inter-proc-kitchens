@@ -1,0 +1,22 @@
+name: Publish Kampala business location
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-kampala-location.yml'
+      - 'scripts/set_kampala_location.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  location:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add Kampala location to site and search metadata
+        run: python3 scripts/set_kampala_location.py
+      - name: Commit website update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || (git commit -m "Show Kampala location on INTER-PROC site and in search metadata" && git push)
