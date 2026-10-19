@@ -1,0 +1,24 @@
+name: Publish INTER-PROC technical SEO
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-technical-seo.yml'
+      - 'scripts/add_seo.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  seo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Apply technical SEO to website
+        run: python3 scripts/add_seo.py
+      - name: Publish optimized website
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || (git commit -m "Add SEO metadata and structured business information" && git push)
