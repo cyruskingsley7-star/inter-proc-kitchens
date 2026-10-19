@@ -33,10 +33,10 @@ for a,b in old.items():
     html=html.replace(a,b,1)
 
 # Make the verified city visible to customers on the contact section.
-contact = '<p class="reveal" style="--reveal-delay: 70ms;">Tell us about your space, what you need and what you would like it to become.</p>'
-if contact not in html:
+contact_pattern = r'(<p[^>]*>Tell us about your space, what you need and what you would like it to become\\.</p>)'
+html, count = re.subn(contact_pattern, lambda m: m.group(1) + '\\n          <p>Based in Kampala, Uganda.</p>', html, count=1)
+if count != 1:
     raise SystemExit("Contact section insertion point not found")
-html=html.replace(contact,contact+'\n          <p class="reveal" style="--reveal-delay: 70ms;">Based in Kampala, Uganda.</p>',1)
 
 footer = '<p>INTER-PROC · Custom kitchens and cabinetry</p>'
 if footer not in html:
