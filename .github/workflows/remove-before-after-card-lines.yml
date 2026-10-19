@@ -1,0 +1,33 @@
+name: Remove borders below before-after cards
+on:
+  push:
+    paths:
+      - '.github/workflows/remove-before-after-card-lines.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove black card caption lines
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          html=p.read_text(encoding='utf-8')
+          old='.transformation .story-panel figcaption{display:block;padding:1.25rem 1.15rem 1.35rem;border-bottom:2px solid #252321;'
+          new='.transformation .story-panel figcaption{display:block;padding:1.25rem 1.15rem 1.35rem;border-bottom:0;'
+          if old not in html:
+              raise SystemExit('Expected caption border CSS not found; no changes made')
+          html=html.replace(old,new,1)
+          p.write_text(html,encoding='utf-8')
+          print('Removed both black lines below Before and After card captions')
+          PY
+      - name: Commit updated design
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || (git commit -m "Remove black lines below before and after cards" && git push)
